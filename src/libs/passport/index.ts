@@ -5,11 +5,19 @@ import User, { IUser } from "../../models/user";
 
 const LocalStrategy = passportLocal.Strategy;
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 passport.use(
   new LocalStrategy(
     {
-      passwordField: "user[password]",
-      usernameField: "user[email]",
+      passwordField: "password",
+      usernameField: "username",
     },
     (email: string, password: string, done: any) => {
       User.findOne({ email })
@@ -18,7 +26,7 @@ passport.use(
             return done(null, false, { errors: { "email or password": "is invalid" } });
           }
 
-          return done(null, user);
+          return done(null, user, { message: "welcome" });
         })
         .catch(done);
     }

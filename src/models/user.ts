@@ -8,7 +8,8 @@ dotenv.config();
 export interface IUser extends Document {
   email: string;
   id: string;
-  password: string;
+  hash: string;
+  salt: string;
   username: string;
   checkPassword?: any;
   validatePassword?: any;
@@ -44,8 +45,10 @@ userSchema.methods.setPassword = function(password: string) {
 };
 
 userSchema.methods.validatePassword = function(password: string) {
-  const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, "sha512").toString("hex");
-  return this.hash === hash;
+  const hashChecked = crypto
+    .pbkdf2Sync(password, this.salt, 10000, 512, "sha512")
+    .toString("hex");
+  return hashChecked === this.hash;
 };
 
 userSchema.methods.generateJWT = function() {
