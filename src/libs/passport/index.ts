@@ -17,13 +17,15 @@ passport.use(
   new LocalStrategy(
     {
       passwordField: "password",
-      usernameField: "username",
+      usernameField: "email",
     },
     (email: string, password: string, done: any) => {
-      User.findOne({ email })
+      User.findOne({ email: email.toLowerCase() })
         .then((user: IUser) => {
           if (!user || !user.validatePassword(password)) {
-            return done(null, false, { errors: { "email or password": "is invalid" } });
+            return done(null, false, {
+              errors: { errorMessage: "email or password is invalid" },
+            });
           }
 
           return done(null, user, { message: "welcome" });

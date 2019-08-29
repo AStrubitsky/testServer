@@ -6,8 +6,8 @@ import { sessionHandler } from "./handlers/03-session-handler";
 import { bodyParserHandler } from "./handlers/04-bodyParser-handler";
 import { passportHandler } from "./handlers/05-passport-handler";
 import models, { connectDb } from "./models";
+import { loginRoute, logoutRoute } from "./routes/auth";
 import { frontRoute } from "./routes/frontpage";
-import { loginRoute } from "./routes/login";
 import { createUsersWithMessages } from "./seeds/user";
 
 dotenv.config();
@@ -23,6 +23,7 @@ passportHandler.init(app);
 
 app.get("/", frontRoute.get);
 app.post("/login", loginRoute.post);
+app.post("/logout", logoutRoute.post);
 
 connectDb().then(
   async (): Promise<void> => {
